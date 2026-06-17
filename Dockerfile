@@ -49,11 +49,7 @@ print('Models ready')"
 # coturn設定
 COPY turnserver.conf /etc/turnserver.conf
 
-# Aniアバター動画
-RUN mkdir -p /workspace/livetalking/data/video
-COPY neutral_boomerang.mp4 /workspace/livetalking/data/video/ani_neutral.mp4
-
-# エントリーポイント
+# エントリーポイント（アバター動画は/workspaceにユーザーがアップロード）
 COPY entrypoint.sh /workspace/entrypoint.sh
 RUN chmod +x /workspace/entrypoint.sh
 
