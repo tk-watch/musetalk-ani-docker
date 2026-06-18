@@ -57,16 +57,8 @@ RUN pip install --no-cache-dir \
     tqdm \
     huggingface_hub
 
-# モデルダウンロード（ビルド時に実行、/opt 配下へ）
-RUN python3 -c "\
-from huggingface_hub import snapshot_download, hf_hub_download; \
-import os; \
-os.makedirs('/opt/livetalking/models/dwpose', exist_ok=True); \
-snapshot_download(repo_id='TMElyralab/MuseTalk', local_dir='/opt/livetalking/models/musetalk', ignore_patterns=['*.git*']); \
-hf_hub_download(repo_id='yzd-v/DWPose', filename='dw-ll_ucoco_384.onnx', local_dir='/opt/livetalking/models/dwpose'); \
-hf_hub_download(repo_id='yzd-v/DWPose', filename='det_onnx_model.onnx', local_dir='/opt/livetalking/models/dwpose'); \
-hf_hub_download(repo_id='openai/whisper-tiny', filename='pytorch_model.bin', local_dir='/opt/livetalking/models/whisper/tiny'); \
-print('Models ready')"
+# モデルはイメージに焼き込まない（イメージ肥大化＝pull遅延を避ける）。
+# 初回起動時にentrypoint.shが永続ボリューム /workspace/models へDLし、/opt/livetalking/models へsymlinkする。
 
 # coturn設定
 COPY turnserver.conf /etc/turnserver.conf
